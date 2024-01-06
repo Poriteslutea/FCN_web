@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from pydantic import BaseModel
 import sys
@@ -31,6 +31,20 @@ async def create_member(member: MemberCreate, session: Session = Depends(get_ses
     session.refresh(db_member)
 
     return db_member
+
+class MemberAuth(BaseModel):
+    email: str
+    password: str
+
+@router.post("/authenticate/")
+async def authenticate(member: MemberCreate, session: Session = Depends(get_session)):
+
+    db_member = session.query(Member).filter(Member.email == member.email).first()
+    
+    if db_member is None or db_member.password != member.password:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    
+    return {"message": "Authentication successful"}
 
 # @router.delete('/{id}')
 # def delete(id: int, db: Session = Depends(get_db)):

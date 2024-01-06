@@ -156,14 +156,39 @@ const submitted = ref(false)
 const register = ref(false)
 
 
+
 import 'animate.css'
 
 const loginAction = async (data) => {
   // Let's pretend this is an ajax request:
-  await new Promise((r) => setTimeout(r, 1000))
-  submitted.value = true
   console.log(data.email)
   console.log(data.password)
+  try {
+        const response = await fetch('http://localhost:8000/api/member/authenticate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        });
+
+        if (response.ok) {
+          // 登录成功，重定向到其他页面或执行其他操作
+          navigateTo('/fishapp') // 根据实际情况跳转到 Dashboard 页面
+        } else {
+          // 登录失败，处理错误信息
+          const errorData = await response.json()
+          console.error('Login failed!', errorData.detail)
+          alert(errorData.detail)
+        }
+        submitted.value = true
+      } catch (error) {
+        console.error('Error during login:', error);
+      }
+  
 
 }
 
