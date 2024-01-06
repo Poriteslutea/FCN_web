@@ -1,9 +1,12 @@
 <template>
     <div class="bg-gradient-to-br from-blue-950 to-teal-400 h-screen flex bg-teal-400 justify-center items-center ">
         <div class="container flex items-center flex-col">
-            <div class="bg-white bg-opacity-10 shadow-2xl rounded-lg p-8 justify-center">
+            
+            <div class="bg-white bg-opacity-10 shadow-2xl rounded-lg p-12 justify-center animate__animated animate__backInRight w-50">
 
-                <IconFish class="text-white w-40 my-8 mx-auto hover:translate-x-3" :fontControlled="false"/>
+                <IconFish class="text-white w-40 mb-8 mx-auto" :class="{'animate__animated': register === true, 'animate__tada': register === true}" :fontControlled="false"/>
+
+                
                 <div v-if="!register">
                     <FormKit
                     type="form"
@@ -53,7 +56,7 @@
                     </FormKit>
 
                     <div class="flex flex-col mt-3">
-                        <button class="w-full rounded-lg bg-teal-400 hover:translate-y-1 py-2 font-bold text-white shadow-sm mt-1 border-solid border-gray-500">Log in</button>
+                        <button class="w-full rounded-lg bg-teal-400 hover:bg-teal-500 py-2 font-bold text-white shadow-sm mt-1 border-solid border-gray-500">Log in</button>
                         <div class="flex items-center justify-center mt-3">
                             <div class="border-t border-gray-400 border-s-2 flex-grow"></div>
                             <div class="mx-2 text-gray-300">or</div>
@@ -129,6 +132,8 @@
 import IconFish from '~/assets/icons/fish_icon.svg'
 const submitted = ref(false)
 const register = ref(false)
+
+import 'animate.css'
 
 const submitHandler = async () => {
   // Let's pretend this is an ajax request:
