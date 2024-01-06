@@ -4,7 +4,7 @@
             
             <div class="bg-white bg-opacity-10 shadow-2xl rounded-lg p-12 justify-center animate__animated animate__backInRight w-50">
 
-                <IconFish class="text-white w-40 mb-8 mx-auto" :class="{'animate__animated': register === true, 'animate__tada': register === true}" :fontControlled="false"/>
+                <IconFish class="text-white w-40 mb-8 mx-auto" :class="{'animate__animated': shakeFish === true, 'animate__tada': shakeFish === true}" :fontControlled="false"/>
 
                 
                 <div v-if="!register">
@@ -56,7 +56,7 @@
                     </FormKit>
 
                     <div class="flex flex-col mt-3">
-                        <button class="w-full rounded-lg bg-teal-400 hover:bg-teal-500 py-2 font-bold text-white shadow-sm mt-1 border-solid border-gray-500">Log in</button>
+                        <button class="w-full rounded-lg bg-teal-500 hover:bg-teal-400 py-2 font-bold text-white shadow-sm mt-1 border-solid border-gray-500">Log in</button>
                         <div class="flex items-center justify-center mt-3">
                             <div class="border-t border-gray-400 border-s-2 flex-grow"></div>
                             <div class="mx-2 text-gray-300">or</div>
@@ -116,9 +116,19 @@
                             }"
                         />
                     </div>
+
+                    <div class="flex flex-col mt-3">
+                        <button class="w-full rounded-lg bg-teal-500 hover:bg-teal-400 py-2 font-bold text-white shadow-sm mt-4 border-solid border-gray-500">Register</button>   
+                        <div class="flex items-center justify-center mt-3">
+                            <div class="border-t border-gray-400 border-s-2 flex-grow"></div>
+                            <div class="mx-2 text-gray-300">or</div>
+                            <div class="border-t border-gray-400 border-s-2 flex-grow"></div>
+                        </div>
+                        <a class="text-gray-300 text-center mt-1 hover:text-white hover:underline cursor-pointer" @click="goLogin">Log in</a>
+                    </div>
                 
             
-                    <button class="w-full rounded-lg bg-teal-400 hover:bg-teal-500 py-2 font-bold text-white shadow-sm mt-4 border-solid border-gray-500">Register</button>   
+                    
                           
                 </div>
             </div>
@@ -141,9 +151,20 @@ const submitHandler = async () => {
   submitted.value = true
 }
 
-const createAccount = () => {
-    console.log(register.value)
+const shakeFish = ref(false)
+
+const createAccount = async() => {
     register.value = true
+    shakeFish.value = true
+    await new Promise((r) => setTimeout(r, 1000))
+    shakeFish.value = false
+}
+
+const goLogin = async() => {
+    register.value = false
+    shakeFish.value = true
+    await new Promise((r) => setTimeout(r, 1000))
+    shakeFish.value = false
 }
 
 </script>
