@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gradient-to-br from-blue-950 to-teal-400 h-screen flex bg-teal-400 justify-center items-center ">
+
         <div class="container flex items-center flex-col">
             
             <div class="bg-white bg-opacity-10 shadow-2xl rounded-lg p-12 justify-center animate__animated animate__backInRight w-50">
@@ -10,17 +10,15 @@
                 <div v-if="!register">
                     <FormKit
                     type="form"
-                    id="registration-example"
+                    id="login-form"
                     :form-class="submitted ? 'hide' : 'show'"
-                    submit-label="Register"
-                    @submit="submitHandler"
+                    @submit="loginAction"
                     :actions="false"
                     #default="{ value }"
-                    >
-                    <!-- <h2 class="text-2xl font-semibold mb-4 text-center text-white">LogIn</h2>  -->
-                
+                    >       
                     <FormKit
-                        type="email"
+                        type="text"
+                        name="email"
                         label="Email"
                         validation="required|email"
                         placeholder="example@example.com"
@@ -53,8 +51,6 @@
                     
                     <!-- <button class="w-full rounded-lg bg-teal-500 hover:bg-teal-400 py-2 font-bold text-gray-200 shadow-sm mt-3">Register</button>    -->
                 
-                    </FormKit>
-
                     <div class="flex flex-col mt-3">
                         <button class="w-full rounded-lg bg-teal-500 hover:bg-teal-400 py-2 font-bold text-white shadow-sm mt-1 border-solid border-gray-500">Log in</button>
                         <div class="flex items-center justify-center mt-3">
@@ -62,15 +58,27 @@
                             <div class="mx-2 text-gray-300">or</div>
                             <div class="border-t border-gray-400 border-s-2 flex-grow"></div>
                         </div>
-                        <a class="text-gray-300 text-center mt-1 hover:text-white hover:underline cursor-pointer" @click="createAccount"> create an account</a>
+                        <a class="text-gray-300 text-center mt-1 hover:text-white hover:underline cursor-pointer" @click="goRegister"> create an account</a>
                     </div>
+
+                </FormKit>  
                 
                 </div>
                 
                 <div v-if="register">
 
                     <FormKit
-                        type="email"
+                    type="form"
+                    id="register-form"
+                    :form-class="submitted ? 'hide' : 'show'"
+                    @submit="registerAction"
+                    :actions="false"
+                    #default="{ value }"
+                    >
+
+                    <FormKit
+                        type="text"
+                        name="email"
                         label="Email"
                         validation="required|email"
                         placeholder="example@example.com"
@@ -126,6 +134,10 @@
                         </div>
                         <a class="text-gray-300 text-center mt-1 hover:text-white hover:underline cursor-pointer" @click="goLogin">Log in</a>
                     </div>
+
+                </FormKit>
+
+               
                 
             
                     
@@ -133,7 +145,7 @@
                 </div>
             </div>
         </div>
-    </div>
+ 
   
 </template>
 
@@ -143,17 +155,21 @@ import IconFish from '~/assets/icons/fish_icon.svg'
 const submitted = ref(false)
 const register = ref(false)
 
+
 import 'animate.css'
 
-const submitHandler = async () => {
+const loginAction = async (data) => {
   // Let's pretend this is an ajax request:
   await new Promise((r) => setTimeout(r, 1000))
   submitted.value = true
+  console.log(data.email)
+  console.log(data.password)
+
 }
 
 const shakeFish = ref(false)
 
-const createAccount = async() => {
+const goRegister = async() => {
     register.value = true
     shakeFish.value = true
     await new Promise((r) => setTimeout(r, 1000))
@@ -165,6 +181,32 @@ const goLogin = async() => {
     shakeFish.value = true
     await new Promise((r) => setTimeout(r, 1000))
     shakeFish.value = false
+}
+
+
+const registerAction = async (data) => {
+
+    try {
+        const response = await fetch('http://localhost:8000/api/member/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        })
+
+        if (response.ok) {
+          alert('Member created successfully');
+        } else {
+          console.error('Failed to create member');
+        }
+      } catch (error) {
+        console.error('Error creating member:', error);
+      }
+
 }
 
 </script>
