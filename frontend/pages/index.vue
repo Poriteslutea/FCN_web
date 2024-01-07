@@ -164,7 +164,7 @@ const loginAction = async (data) => {
   console.log(data.email)
   console.log(data.password)
   try {
-        const response = await fetch('http://localhost:8000/api/member/authenticate', {
+        const response = await fetch('http://localhost:8088/api/member/authenticate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -212,7 +212,7 @@ const goLogin = async() => {
 const registerAction = async (data) => {
 
     try {
-        const response = await fetch('http://localhost:8000/api/member/create', {
+        const response = await fetch('http://localhost:8088/api/member/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

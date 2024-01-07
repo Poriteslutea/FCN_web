@@ -6,29 +6,26 @@ from routers import member
 
 app = FastAPI()
 
-subapi = FastAPI()
-
-subapi.include_router(member.router)
-# subapi.include_router(travelpay.router)
+# 這個可依models.py所設的建立table
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:8005"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 這個可依models.py所設的建立table
-@subapi.on_event("startup")
-def on_startup():
-    create_db_and_tables()
+subapi = FastAPI()
+
+subapi.include_router(member.router)
 
 @subapi.get('/')
 def hw():
 	return 'Hello world!'
-
-
 
 
 app.mount("/api", subapi)
