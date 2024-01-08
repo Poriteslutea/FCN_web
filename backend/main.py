@@ -11,15 +11,16 @@ app = FastAPI()
 def on_startup():
     create_db_and_tables()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:8005"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 
 subapi = FastAPI()
+
+subapi.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_headers=["*"],
+)
 
 subapi.include_router(member.router)
 

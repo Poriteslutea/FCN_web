@@ -22,7 +22,7 @@ class MemberCreate(BaseModel):
     password: str
 
 
-@router.post("/create/", response_model=Member)
+@router.post("/create", response_model=Member)
 async def create_member(member: MemberCreate, session: Session = Depends(get_session)):
 
     db_member = Member(email=member.email, password=member.password)
@@ -36,7 +36,7 @@ class MemberAuth(BaseModel):
     email: str
     password: str
 
-@router.post("/authenticate/")
+@router.post("/authenticate")
 async def authenticate(member: MemberCreate, session: Session = Depends(get_session)):
 
     db_member = session.query(Member).filter(Member.email == member.email).first()
