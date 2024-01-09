@@ -160,7 +160,7 @@ import 'animate.css'
 const loginAction = async (data) => {
   // Let's pretend this is an ajax request:
   try {
-        const response = await fetch('http://localhost:9000/api/member/authenticate', {
+        const response = await fetch('/api/member/authenticate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ const goLogin = async() => {
 const registerAction = async (data) => {
 
     try {
-        const response = await fetch('http://localhost:9000/api/member/create', {
+        const response = await fetch('/api/member/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
