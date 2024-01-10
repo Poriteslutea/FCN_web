@@ -9,5 +9,11 @@ export default defineNuxtConfig({
   formkit: {
     autoImport: true,
     configFile: './formkit.config.ts'
+  },
+  runtimeConfig: {
+    public: {
+      webHost: process.env.WEB_HOST,
+      apiBaseUrl: process.env.API_BASE_URL,
+    }   
   }
 })

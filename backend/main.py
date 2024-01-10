@@ -17,8 +17,9 @@ subapi = FastAPI()
 
 subapi.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "https://fishapp.megoo.site", "https://www.fishapp.megoo.site"],
     allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -26,7 +27,8 @@ subapi.include_router(member.router)
 
 @subapi.get('/')
 def hw():
-	return 'Hello world!'
+    print('hi')
+    return 'Hello world!'
 
 
 app.mount("/api", subapi)

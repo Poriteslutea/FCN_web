@@ -150,6 +150,7 @@
 
 <script setup>
 import IconFish from '~/assets/icons/fish_icon.svg'
+const config = useRuntimeConfig()
 const submitted = ref(false)
 const register = ref(false)
 
@@ -160,7 +161,7 @@ import 'animate.css'
 const loginAction = async (data) => {
   // Let's pretend this is an ajax request:
   try {
-        const response = await fetch('/api/member/authenticate', {
+        const response = await fetch(`${config.public.apiBaseUrl}/member/authenticate`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -208,7 +209,8 @@ const goLogin = async() => {
 const registerAction = async (data) => {
 
     try {
-        const response = await fetch('/api/member/create', {
+        const response = await fetch(`${config.public.apiBaseUrl}/member/create`, {
+          baseURL: config.public.apiBaseUrl,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
