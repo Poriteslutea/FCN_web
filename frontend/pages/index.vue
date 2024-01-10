@@ -210,7 +210,6 @@ const registerAction = async (data) => {
 
     try {
         const response = await fetch(`${config.public.apiBaseUrl}/member/create`, {
-          baseURL: config.public.apiBaseUrl,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
