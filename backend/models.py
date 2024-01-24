@@ -22,15 +22,16 @@ class StockReport(SQLModel, table=True):
     is_ko: int
     is_ki: int
 
-class ProductInfo(SQLModel, table=True):
+class Product(SQLModel, table=True):
     id: Optional[str] = Field(default=None, primary_key=True)
     start_date: str
     start_trace_date: str
     end_date: str
     ko_limit: float
     ki_limit: float
+    price_type: str
 
-class StockInfo(SQLModel, table=True):
+class Stock(SQLModel, table=True):
     id: Optional[str] = Field(default=None, primary_key=True)
 
 class ProductStock(SQLModel, table=True):

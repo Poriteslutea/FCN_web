@@ -6,6 +6,7 @@ load_dotenv()
 
 POSTGRES_URI = os.getenv('POSTGRES_URI')
 engine = create_engine(POSTGRES_URI, echo=True)
+connect = engine.connect()
 
 
 def create_db_and_tables():

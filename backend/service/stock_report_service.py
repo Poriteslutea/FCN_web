@@ -5,7 +5,8 @@ import os
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
-from models import StockReport
+from models import StockReport, Product
+from db import connect
 import yfinance as yf
 from datetime import datetime, timedelta
 import pandas as pd
@@ -89,13 +90,19 @@ def replace_after(df, condition_type, critical_val, replace_val):
     return dd
 
 
-def get_hist_report(stock_code: List[str], start_date: str, end_date: str, start_trace_date: str, price_type: str='Close') -> pd.DataFrame:
+def get_hist_report(stock_code: List[str], 
+                    start_date: str, 
+                    end_date: str, 
+                    start_trace_date: str,
+                    ko_limit: float=1.0,
+                    ki_limit: float=0.6, 
+                    price_type: str='Close') -> pd.DataFrame:
 
     stock_hist = get_hist_price(stock_code=stock_code, start_date=start_date, end_date=end_date, price_type=price_type)
 
     # 得到與ko及ki的差距比例(%)
-    ko_diff = stock_hist.sub(stock_hist.iloc[0]).div(stock_hist) * 100
-    ki_diff = stock_hist.sub((stock_hist.iloc[0] * 0.6)).div(stock_hist) * 100
+    ko_diff = stock_hist.sub(stock_hist.iloc[0] * ko_limit).div(stock_hist) * 100
+    ki_diff = stock_hist.sub((stock_hist.iloc[0] * ki_limit)).div(stock_hist) * 100
 
     # 換一下column name，對不同dataframe加上後綴
     ko_diff = ko_diff.rename(columns={col: col+'_koDiff' for col in ko_diff.columns})
@@ -133,6 +140,88 @@ def get_hist_report(stock_code: List[str], start_date: str, end_date: str, start
     return merge_df
 
 
+def report_to_db(report: pd.DataFrame, product: Product):
+    
+    product_id = product.id 
+    ko_limit = product.ko_limit
+    ki_limit = product.ki_limit
+    stock_id_list = [c for c in report.columns if '_' not in c]
+    report.reset_index(inplace=True)
+    report_rc = report.to_dict('records')
+    base_row = report_rc[0]
+    ret = []
+    for row in report_rc:
+        date = row['Date']
+        for stock in stock_id_list:
+            stock_report_row = {}
+            stock_report_row['product_id'] = product_id
+            stock_report_row['stock_id'] = stock
+            stock_report_row['date'] = date
+            stock_report_row['close'] = row[stock]
+            stock_report_row['ko_base'] = base_row[stock] * ko_limit
+            stock_report_row['ki_base'] = base_row[stock] * ki_limit
+            stock_report_row['ko_diff'] = row[f'{stock}_koDiff']
+            stock_report_row['ki_diff'] = row[f'{stock}_kiDiff']
+            if (stock_report_row['ko_diff'] >= 0) or np.isnan(stock_report_row['ko_diff']):
+                stock_report_row['is_ko'] = True
+            if stock_report_row['ki_diff'] <= 0 or np.isnan(stock_report_row['ki_diff']):
+                stock_report_row['is_ki']= True
+            ret.append(stock_report_row)
+    
+    ret_df = pd.DataFrame(ret)
+    ret_df.to_sql(name='stock_report', con=connect, if_exists='append')
+    
+    return ret
+          
+
+
+
+
+
+def import_product(product: Product):
+    curr_dt = datetime.today()
+    start_dt = datetime.strptime(product.start_date, '%Y-%m-%d')
+    start_trace_dt = datetime.strptime(product.start_trace_date, '%Y-%m-%d')
+    end_dt = datetime.strptime(product.end_date, '%Y-%m-%d')
+   
+    # 還沒開始
+    if curr_dt < start_dt:
+        print(f'產品：{product.id}還沒開始')
+        return
+    
+    # 已過結束日期
+    if curr_dt > end_dt:
+        print(f'產品{product.id}已過期')
+        return
+    
+    # 資料庫還沒有產品資料（未初始化過)
+
+    # 從頭更新到最後日期
+    # df = get_hist_report(stock_code, 
+                # start_date=product.start_date, 
+                # end_date=product.end_date, 
+                # start_trace_date=product.start_trace_date, 
+                # ko_limit=product.ko_limit, 
+                # ki_limit=product.ki_limit,
+                # price_type=product.price_type) 
+    # report_to_db(df, product)
+
+    # 資料庫已有產品資料
+
+    # 由最後一天更新到現在日期
+
+    
+    # 已開始但還沒追蹤
+
+    # 已開始追蹤
+
+    # 未達結束日期但已All KO
+
+    return 
+
+    
+
+
 
 
 if __name__ == '__main__':
@@ -140,12 +229,39 @@ if __name__ == '__main__':
     # 產品起始日期 （開始記錄每日收盤價、ko及ki價差）
     start_date = '2023-12-21'
     # 起始追蹤ko日期 （從這天開始，如果所有股票都Ko，直接結束)
-    start_trace_date = '2024-01-29'
+    start_trace_date = '2024-01-02'
     # 產品預計結束日期 (沒有ko的話的結束日期)
     end_date = datetime.today().strftime('%Y-%m-%d') # 今日
     df = get_hist_report(stock_code=stocks, start_date=start_date, end_date=end_date, start_trace_date=start_trace_date)
     print(df)
 
 
+    product_id = 'fcn' 
+    ko_limit = 1
+    ki_limit = 0.6
+    stock_id_list = [c for c in df.columns if '_' not in c]
+    df.reset_index(inplace=True)
+    report_rc = df.to_dict('records')
+    base_row = report_rc[0]
+    ret = []
+    for row in report_rc:
+        date = row['Date']
+        for stock in stock_id_list:
+            stock_report_row = {}
+            stock_report_row['product_id'] = product_id
+            stock_report_row['stock_id'] = stock
+            stock_report_row['date'] = date
+            stock_report_row['close'] = row[stock]
+            stock_report_row['ko_base'] = base_row[stock] * ko_limit
+            stock_report_row['ki_base'] = base_row[stock] * ki_limit
+            stock_report_row['ko_diff'] = row[f'{stock}_koDiff']
+            stock_report_row['ki_diff'] = row[f'{stock}_kiDiff']
+            stock_report_row['is_ko'] = (stock_report_row['ko_diff'] >= 0) or np.isnan(stock_report_row['ko_diff'])
+            stock_report_row['is_ki']= stock_report_row['ki_diff'] <= 0 or np.isnan(stock_report_row['ki_diff'])
+            ret.append(stock_report_row)
+    
+    ret_df = pd.DataFrame(ret)
+
+    print(ret_df)
 
 
