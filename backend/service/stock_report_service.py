@@ -1,12 +1,12 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
 from pydantic import BaseModel
 import sys
 import os
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
-from models import StockReport, Product
-from db import connect
+from models import StockReport, Product, Stock
+from db import connect, engine
 import yfinance as yf
 from datetime import datetime, timedelta
 import pandas as pd
@@ -171,17 +171,13 @@ def report_to_db(report: pd.DataFrame, product: Product):
     ret_df = pd.DataFrame(ret)
     ret_df.to_sql(name='stock_report', con=connect, if_exists='append')
     
-    return ret
+    return ret_df
           
-
-
-
 
 
 def import_product(product: Product):
     curr_dt = datetime.today()
     start_dt = datetime.strptime(product.start_date, '%Y-%m-%d')
-    start_trace_dt = datetime.strptime(product.start_trace_date, '%Y-%m-%d')
     end_dt = datetime.strptime(product.end_date, '%Y-%m-%d')
    
     # 還沒開始
@@ -194,28 +190,45 @@ def import_product(product: Product):
         print(f'產品{product.id}已過期')
         return
     
-    # 資料庫還沒有產品資料（未初始化過)
-
-    # 從頭更新到最後日期
-    # df = get_hist_report(stock_code, 
-                # start_date=product.start_date, 
-                # end_date=product.end_date, 
-                # start_trace_date=product.start_trace_date, 
-                # ko_limit=product.ko_limit, 
-                # ki_limit=product.ki_limit,
-                # price_type=product.price_type) 
-    # report_to_db(df, product)
-
-    # 資料庫已有產品資料
-
-    # 由最後一天更新到現在日期
-
+    # 確認資料庫有沒有產品資料
+    product_id = product.id
+    stock_id_list = [st.id for st in product.stocks]
+    curr_date = curr_dt.strftime('%Y-%m-%d')
+    with Session(engine) as session:
+        statement = select(StockReport).where(StockReport.product_id == product_id)
+        results = session.exec(statement)
     
-    # 已開始但還沒追蹤
-
-    # 已開始追蹤
-
-    # 未達結束日期但已All KO
+    
+    if not results:
+        # 資料庫還沒有產品資料（要進行初始化 - 從開始日期計算到當前日期，並將結果存至db中stock_report的table)
+        df = get_hist_report(stock_code=stock_id_list, 
+            start_date=product.start_date, 
+            end_date=curr_date, 
+            start_trace_date=product.start_trace_date, 
+            ko_limit=product.ko_limit, 
+            ki_limit=product.ki_limit,
+            price_type=product.price_type) 
+        report_to_db(report=df, product=product)
+        print(f'產品{product_id}已初始化至資料庫')
+    else:
+        # 資料庫有產品資料，從資料庫目前存到的最後日期更新到現在日期
+        latest_date = results.all()[0].Date
+        latest_dt = datetime.strptime(latest_date, '%Y-%m-%d')
+        if curr_dt > latest_dt:
+            start_dt = latest_dt + timedelta(days=1)
+            start_date = start_dt.strftime('%Y-%m-%d')
+            df = get_hist_report(stock_code=stock_id_list, 
+                start_date=start_date, 
+                end_date=curr_date, 
+                start_trace_date=product.start_trace_date, 
+                ko_limit=product.ko_limit, 
+                ki_limit=product.ki_limit,
+                price_type=product.price_type) 
+            report_to_db(report=df, product=product)
+            print(f'產品{product_id}已更新至資料庫')
+    
+    print('以下為更新資料：')
+    print(ret)
 
     return 
 
