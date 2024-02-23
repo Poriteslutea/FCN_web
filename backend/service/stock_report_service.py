@@ -1,18 +1,20 @@
-from sqlmodel import Session, select
-from pydantic import BaseModel
-import sys
 import os
+import sys
+
+from pydantic import BaseModel
+from sqlmodel import Session, select
+
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
-from models import StockReport, Product, Stock
-from db import connect, engine
-import yfinance as yf
 from datetime import datetime, timedelta
-import pandas as pd
-import numpy as np
 from typing import List
 
+import numpy as np
+import pandas as pd
+import yfinance as yf
+from db import connect, engine
+from models import Product, Stock, StockReport
 
 
 class StockReportCreate(BaseModel):

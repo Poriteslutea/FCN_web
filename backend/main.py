@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db import create_db_and_tables
-from routers import member
+from routers import member, stock_report
 
 
 app = FastAPI()
@@ -9,7 +9,7 @@ app = FastAPI()
 # 這個可依models.py所設的建立table
 @app.on_event("startup")
 def on_startup():
-    create_db_and_tables()
+   create_db_and_tables()
 
 
 
@@ -17,13 +17,13 @@ subapi = FastAPI()
 
 subapi.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://fishapp.megoo.site", "https://www.fishapp.megoo.site"],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 subapi.include_router(member.router)
+subapi.include_router(stock_report.router)
 
 @subapi.get('/')
 def hw():

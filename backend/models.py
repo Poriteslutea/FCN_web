@@ -1,21 +1,23 @@
-from sqlmodel import Field, SQLModel, Relationship
+from typing import Any, List, Optional
+
 from sqlalchemy import Column
-from typing import Optional, Any, List
+from sqlmodel import Field, Relationship, SQLModel
 
 
 # Link Table Model
 class ProductStock(SQLModel, table=True):
+    __tablename__ = "product_stock"
     product_id: Optional[str] = Field(default=None, primary_key=True, foreign_key="product.id")
     stock_id: Optional[str] = Field(default=None, primary_key=True, foreign_key="stock.id")
 
 class MemberProduct(SQLModel, table=True):
+    __tablename__ = "member_product"
     member_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="member.id")
     product_id: Optional[str] = Field(default=None, primary_key=True, foreign_key="product.id")
     
 
 
 # Table Model
-
 class Member(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str
@@ -27,7 +29,7 @@ class StockReport(SQLModel, table=True):
     __tablename__ = "stock_report"
     id: Optional[int] = Field(default=None, primary_key=True)
     product_id: str = Field(default=None, foreign_key="product.id")
-    stock_id: str
+    stock_id: str = Field(default=None, foreign_key="stock.id")
     date: str
     close: float
     ko_base: float
@@ -57,7 +59,7 @@ class Stock(SQLModel, table=True):
     id: Optional[str] = Field(default=None, primary_key=True)
     
     products: List["Product"] = Relationship(back_populates="stocks", link_model=ProductStock)
-    stock_report: Optional["StockReport"] = Relationship(back_populates="stock_report")
+    stock_report: Optional["StockReport"] = Relationship(back_populates="stock")
 
 
 

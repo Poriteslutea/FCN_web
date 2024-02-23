@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from pydantic import BaseModel
 from db import get_session
-from backend.service import stock_report_service
+from service import stock_report_service
 from models import StockReport
 
 
