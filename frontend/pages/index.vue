@@ -90,6 +90,20 @@
                             message: 'text-sm mt-1 text-red-900'
                         }"
                         />
+                    
+                        <FormKit
+                        type="text"
+                        name="name"
+                        label="Name"
+                        placeholder="enter your name"
+                        :classes="{
+                            outer: 'mb-2',
+                            label: 'mb-1 font-bold text-base text-white',
+                            inner: 'rounded-lg',
+                            input: 'w-full text-sm appearance-none border-none focus:outline-none focus:bg-transparent bg-transparent',
+                            message: 'text-sm mt-1 text-red-900'
+                        }"
+                        />
                             
                     <div class="double">
                         <FormKit
@@ -161,20 +175,31 @@ import 'animate.css'
 const loginAction = async (data) => {
   // Let's pretend this is an ajax request:
   try {
-        const response = await fetch(`${config.public.apiBaseUrl}/member/authenticate`, {
+        var details = {
+            'username': data.email,
+            'password': data.password,
+        };
+
+        var formBody = []
+        for (var property in details) {
+          var encodedKey = encodeURIComponent(property)
+          var encodedValue = encodeURIComponent(details[property])
+          formBody.push(encodedKey + "=" + encodedValue)
+        }
+        formBody = formBody.join("&")
+
+        console.log(formBody)
+
+        const response = await fetch(`${config.public.apiBaseUrl}/member/login`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-          }),
+          body: formBody,
         });
 
         if (response.ok) {
-          // 登录成功，重定向到其他页面或执行其他操作
-          navigateTo('/fishapp') // 根据实际情况跳转到 Dashboard 页面
+          navigateTo('/fishapp') 
         } else {
           // 登录失败，处理错误信息
           const errorData = await response.json()
@@ -209,13 +234,14 @@ const goLogin = async() => {
 const registerAction = async (data) => {
 
     try {
-        const response = await fetch(`${config.public.apiBaseUrl}/member/create`, {
+        const response = await fetch(`${config.public.apiBaseUrl}/member/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             email: data.email,
+            username: data.name,
             password: data.password,
           }),
         })
@@ -223,7 +249,9 @@ const registerAction = async (data) => {
         if (response.ok) {
           alert('Member created successfully');
         } else {
-          console.error('Failed to create member');
+          const errorData = await response.json()
+          console.error('Register failed!', errorData.detail)
+          alert(errorData.detail)
         }
       } catch (error) {
         console.error('Error creating member:', error);

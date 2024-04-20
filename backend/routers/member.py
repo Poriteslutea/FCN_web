@@ -81,19 +81,6 @@ async def get_all_activate_member(session: Session = Depends(get_session)):
 
 
 
-# class MemberAuth(BaseModel):
-#     email: str
-#     password: str
-
-# @router.post("/authenticate")
-# async def authenticate(member: MemberCreate, session: Session = Depends(get_session)):
-
-#     db_member = session.query(Member).filter(Member.email == member.email).first()
-    
-#     if db_member is None or db_member.password != member.password:
-#         raise HTTPException(status_code=401, detail="Invalid username or password")
-    
-#     return {"message": "Authentication successful"}
 
 
 

@@ -20,6 +20,7 @@ subapi.add_middleware(
     allow_origins=["*"],
     allow_credentials=True,
     allow_headers=["*"],
+    allow_methods=["*"]
 )
 
 subapi.include_router(member.router)
