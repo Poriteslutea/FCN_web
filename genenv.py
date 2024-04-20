@@ -18,9 +18,13 @@ env_content = ""
 for sec in section:
     env_content += "{}={}\n".format(sec.upper(), section[sec])
 
-with open("backend/.env", "w", encoding="utf8") as env:
-    env.write(env_content)
+if os.path.exists('backend/.env'):
+    with open("backend/.env", "w", encoding="utf8") as env:
+        env.write(env_content)
+       
 
-with open("frontend/.env", "w", encoding="utf8") as env:
-    env.write(env_content)
+if os.path.exists('frontend/.env'):
+    with open("frontend/.env", "w", encoding="utf8") as env:
+        env.write(env_content)
+    
 
