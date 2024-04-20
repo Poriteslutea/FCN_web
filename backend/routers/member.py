@@ -1,9 +1,26 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
-from pydantic import BaseModel
-import sys
+from typing import List, Annotated
+from datetime import timedelta
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+from sqlmodel import Session
+
 from db import get_session
-from models import Member
+from service.db_member import (
+    get_all_member, 
+    create_member
+)
+from service.oauth2 import (
+    get_current_active_user, 
+    create_access_token,
+    authenticate_user
+)
+from model import Member
+from schema import (
+    MemberCreateReq, 
+    MemberResp,
+    Token
+)
 
 
 router = APIRouter(
@@ -11,47 +28,75 @@ router = APIRouter(
     tags=['Member']
 )
 
-
-@router.get('/all')
-def get_all_member(session: Session = Depends(get_session)):
-    query = session.exec(select(Member)).all()
-    return query
-
-class MemberCreate(BaseModel):
-    email: str
-    password: str
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-@router.post("/create", response_model=Member)
-async def create_member(member: MemberCreate, session: Session = Depends(get_session)):
 
-    db_member = Member(email=member.email, password=member.password)
-    session.add(db_member)
-    session.commit()
-    session.refresh(db_member)
+@router.post("/register", response_model=MemberResp)
+async def register(req: MemberCreateReq, 
+                   session: Session = Depends(get_session)):
+    return create_member(req, session)
 
-    return db_member
 
-class MemberAuth(BaseModel):
-    email: str
-    password: str
-
-@router.post("/authenticate")
-async def authenticate(member: MemberCreate, session: Session = Depends(get_session)):
-
-    db_member = session.query(Member).filter(Member.email == member.email).first()
+@router.post('/login', response_model=Token)
+async def login(request: Annotated[OAuth2PasswordRequestForm, Depends()], 
+          session: Session = Depends(get_session)) -> Token:
     
-    if db_member is None or db_member.password != member.password:
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+    member = authenticate_user(username=request.username,
+                               password=request.password,
+                               session=session)
+    if not member:
+        raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"email": member.email}, expires_delta=access_token_expires
+    )
+
+    return Token(
+        access_token=access_token,
+        token_type='bearer',
+        email=member.email,
+        name=member.name
+    )
+
+@router.get("/me", response_model=MemberResp)
+async def read_user_me(
+    current_user: Annotated[Member, Depends(get_current_active_user)]
+):
+    return MemberResp(email=current_user.email, 
+                    username=current_user.name)
+  
+
+@router.get('/all', response_model=List[MemberResp])
+async def get_all_activate_member(session: Session = Depends(get_session)):
+    members =  get_all_member(session)
+    activate_members = [{"username": row.name, "email": row.email} for row in members if not row.disabled]
+    return [MemberResp(**member) for member in activate_members]
+
+
+
+
+
+# class MemberAuth(BaseModel):
+#     email: str
+#     password: str
+
+# @router.post("/authenticate")
+# async def authenticate(member: MemberCreate, session: Session = Depends(get_session)):
+
+#     db_member = session.query(Member).filter(Member.email == member.email).first()
     
-    return {"message": "Authentication successful"}
+#     if db_member is None or db_member.password != member.password:
+#         raise HTTPException(status_code=401, detail="Invalid username or password")
+    
+#     return {"message": "Authentication successful"}
 
-# @router.delete('/{id}')
-# def delete(id: int, db: Session = Depends(get_db)):
-#     return db_clientinfo.delete_client(id, db)
 
-# @router.post('')
-# def create(request: ClientInfoBase, db: Session = Depends(get_db)):
-#     return db_clientinfo.create_client(db, request)
+
+
 
 

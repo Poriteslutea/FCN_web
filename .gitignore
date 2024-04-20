@@ -27,3 +27,5 @@ logs
 __pycache__/
 *.py[cod]
 *$py.class
+notebook/
+backend/local.ini

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db import create_db_and_tables
-from routers import member, stock_report
+from routers import member
 
 
 app = FastAPI()
@@ -10,7 +10,6 @@ app = FastAPI()
 @app.on_event("startup")
 def on_startup():
    create_db_and_tables()
-
 
 
 subapi = FastAPI()
@@ -23,7 +22,6 @@ subapi.add_middleware(
 )
 
 subapi.include_router(member.router)
-subapi.include_router(stock_report.router)
 
 @subapi.get('/')
 def hw():

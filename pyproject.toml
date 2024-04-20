@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "fcn-project"
+version = "0.1.0"
+description = ""
+authors = ["Poriteslutea <rubymagoo@gmail.com>"]
+readme = "README.md"
+packages = [{include = "backend"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "0.95.0"
+uvicorn = "0.21.1"
+sqlmodel = "0.0.11"
+pydantic = "1.10.7"
+python-dotenv = "0.21.0"
+psycopg2-binary = "2.9.6"
+passlib = "^1.7.4"
+bcrypt = "^4.1.2"
+yfinance = "0.2.33"
+python-multipart = "^0.0.9"
+python-jose = "^3.3.0"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
