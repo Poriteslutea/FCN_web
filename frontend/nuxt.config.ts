@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@formkit/nuxt',
-    'nuxt-svgo'
+    'nuxt-svgo',
+    '@pinia/nuxt'
   ],
   formkit: {
     autoImport: true,

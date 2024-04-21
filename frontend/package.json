@@ -19,6 +19,8 @@
   "dependencies": {
     "@formkit/icons": "^1.4.0",
     "@formkit/nuxt": "^1.4.0",
-    "animate.css": "^4.1.1"
+    "@pinia/nuxt": "^0.5.1",
+    "animate.css": "^4.1.1",
+    "pinia": "^2.1.7"
   }
 }

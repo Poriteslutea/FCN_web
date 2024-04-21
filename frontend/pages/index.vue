@@ -167,14 +167,17 @@ import IconFish from '~/assets/icons/fish_icon.svg'
 const config = useRuntimeConfig()
 const submitted = ref(false)
 const register = ref(false)
+const userToken = useTokenStore()
+const router = useRouter()
 
 
 
 import 'animate.css'
 
+
+
 const loginAction = async (data) => {
   // Let's pretend this is an ajax request:
-  try {
         var details = {
             'username': data.email,
             'password': data.password,
@@ -188,28 +191,30 @@ const loginAction = async (data) => {
         }
         formBody = formBody.join("&")
 
-        console.log(formBody)
 
-        const response = await fetch(`${config.public.apiBaseUrl}/member/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formBody,
-        });
+        try{
 
-        if (response.ok) {
-          navigateTo('/fishapp') 
-        } else {
-          // 登录失败，处理错误信息
-          const errorData = await response.json()
-          console.error('Login failed!', errorData.detail)
-          alert(errorData.detail)
+          const response = await fetch(`${config.public.apiBaseUrl}/member/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formBody,
+          });
+
+          if (response.ok) {
+            userToken.storeToken(response.json().accessToken)
+            navigateTo('/fishapp') 
+          } else {
+            // 登录失败，处理错误信息
+            const errorData = await response.json()
+            console.error('Login failed!', errorData.detail)
+            alert(errorData.detail)
+          }
+          submitted.value = true
+        } catch (error) {
+          console.error('Error during login:', error);
         }
-        submitted.value = true
-      } catch (error) {
-        console.error('Error during login:', error);
-      }
   
 
 }
