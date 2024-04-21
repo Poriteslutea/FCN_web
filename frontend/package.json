@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.10.3",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "nuxt": "^3.9.0",
     "nuxt-svgo": "^3.7.0",
     "vue": "^3.4.5",

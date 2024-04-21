@@ -1,10 +1,12 @@
-const baseUrl = `${import.meta.env.NUXT_PUBLIC_API_BASE_URL}`;
+import { defineStore } from 'pinia'
 
 
-export const useTokenStore = defineStore({
-  id: 'token',
+export const useAuthStore = defineStore({
+  id: 'auth',
   state: () => ({
-    userToken:useCookie('token')
+    userToken: useCookie('token'),
+    isLoggedIn: false,
+    member: null
   }),
   getters: {
       getUserToken: state => {
@@ -20,8 +22,30 @@ export const useTokenStore = defineStore({
               secure: true,
           })
           newCookie.value = this.userToken
+          this.isLoggedIn = true
+        },
+
+      removeToken(){
+        this.userToken = null
+        this.isLoggedIn = false
+        this.member = null
       },
-  }
+
+      async getMember(){
+        const config = useRuntimeConfig()
+        const response = await fetch(`${config.public.apiBaseUrl}/member/me`, {
+            method: 'GET',
+            headers: {
+            'Authorization': `Bearer ${this.userToken}`
+            },
+        })
+        if (response.ok) {
+            const data = await response.json()
+            this.member = data
+        } 
+      }
+  },
+  persist: true
 })
 
 // export const useAuthStore = defineStore({
