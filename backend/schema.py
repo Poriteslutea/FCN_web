@@ -15,3 +15,14 @@ class Token(BaseModel):
     token_type: str
     email: str
     name: str 
+
+# Report
+class StockReportResp(BaseModel):
+    date: str
+    close: float
+    ko_base: float
+    ki_base: float
+    ko_diff: float
+    ki_diff: float
+    is_ko: bool
+    is_ki: bool
