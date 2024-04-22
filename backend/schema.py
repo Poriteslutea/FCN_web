@@ -18,11 +18,12 @@ class Token(BaseModel):
 
 # Report
 class StockReportResp(BaseModel):
+    stock: str
     date: str
     close: float
     ko_base: float
     ki_base: float
-    ko_diff: float
-    ki_diff: float
+    ko_diff: float | None
+    ki_diff: float | None
     is_ko: bool
     is_ki: bool

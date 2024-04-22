@@ -9,6 +9,9 @@ from db import get_session
 from service.db_report import (
     get_latest_report
 )
+from service.oauth2 import (
+    get_current_active_user
+)
 
 from model import DailyReport, Product
 from schema import (
@@ -18,11 +21,9 @@ from schema import (
 
 router = APIRouter(
     prefix='/report',
-    tags=['Report']
+    tags=['Report'],
+    dependencies=[Depends(get_current_active_user)]
 )
-
-
-
 
 
 @router.get("/latest/{product_code}", response_model=List[StockReportResp])
@@ -31,6 +32,8 @@ async def get_latest_report_api(
     session: Session = Depends(get_session)
 ):
     return get_latest_report(product_code, session)
+
+
   
 
 

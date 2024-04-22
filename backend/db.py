@@ -5,7 +5,7 @@ from config import DB_URL
 
 load_dotenv()
 
-engine = create_engine(DB_URL, echo=True)
+engine = create_engine(DB_URL)
 connect = engine.connect()
 
 def create_db_and_tables():
