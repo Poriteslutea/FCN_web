@@ -1,13 +1,15 @@
 <template>
 
-        <div class="container flex items-center flex-col">
+    <div class="flex justify-center items-center bg-gradient-to-br from-blue-950 to-teal-400 bg-teal-400 h-screen">
+
+  
             
-            <div class="bg-white bg-opacity-10 shadow-2xl rounded-lg p-12 justify-center animate__animated animate__backInRight w-50">
+            <div class="flex flex-col p-12 px-20 bg-white bg-opacity-10 shadow-2xl rounded-lg animate__animated animate__backInRight ">
 
                 <IconFish class="text-white w-40 mb-8 mx-auto" :class="{'animate__animated': shakeFish === true, 'animate__tada': shakeFish === true}" :fontControlled="false"/>
 
                 
-                <div v-if="!register">
+                <div v-if="!register" class="flex justify-center">
                     <FormKit
                     type="form"
                     id="login-form"
@@ -65,7 +67,7 @@
                 
                 </div>
                 
-                <div v-if="register">
+                <div v-if="register" class="flex justify-center">
 
                     <FormKit
                     type="form"
@@ -105,7 +107,7 @@
                         }"
                         />
                             
-                    <div class="double">
+                    <div>
                         <FormKit
                             type="password"
                             name="password"
@@ -123,20 +125,7 @@
                                 message: 'text-sm mt-1 text-red-900'
                             }"
                         />
-                        <FormKit
-                            type="password"
-                            name="password_confirm"
-                            label="Confirm password"
-                            placeholder="Confirm password"
-                            validation="required|confirm"
-                            :classes="{
-                                outer: 'mb-2',
-                                label: 'mb-1 font-bold text-base text-white',
-                                inner: 'rounded-lg',
-                                input: 'w-full text-sm appearance-none border-none focus:outline-none focus:bg-transparent bg-transparent',
-                                message: 'text-sm mt-1 text-red-900'
-                            }"
-                        />
+                        
                     </div>
 
                     <div class="flex flex-col mt-3">
@@ -149,14 +138,15 @@
                         <a class="text-gray-300 text-center mt-1 hover:text-white hover:underline cursor-pointer" @click="goLogin">Log in</a>
                     </div>
 
-                </FormKit>
+                    </FormKit>
 
                 
 
                 </div>
                 <!-- <button class="bg-teal-500 p-2 px-3 rounded-lg text-bold text-white" @click="testGet">click me</button> -->
             </div>
-        </div>
+    
+    </div>
  
   
 </template>
@@ -172,6 +162,9 @@ const register = ref(false)
 const authStore = useAuthStore()
 const router = useRouter()
 
+definePageMeta({
+  layout: false,
+})
 
 
 const loginAction = async (data) => {
@@ -192,7 +185,7 @@ const loginAction = async (data) => {
         })
 
         if (error.value) {
-          console.log('登入失敗：', error.value)
+          alert(`登入失敗：${error.value}`)
         }
 
         if (tokenData.value) {

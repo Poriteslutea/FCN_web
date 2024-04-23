@@ -1,7 +1,19 @@
 
 <template>
-    <div class="bg-gradient-to-br from-blue-950 to-teal-400 h-screen flex bg-teal-400 justify-center items-center ">
-        <slot />
-    </div>
+    
+   
+<div class="items-center bg-gradient-to-br from-slate-100 to-slate-300 min-h-screen">
+    <HeadMenu></HeadMenu>
+    <slot />
+</div>
 
 </template>
+
+<script setup lang="ts">
+
+import HeadMenu from '~/components/HeadMenu.vue'
+
+
+  
+
+</script>
