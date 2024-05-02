@@ -24,6 +24,7 @@ class Member(SQLModel, table=True):
     email: str = Field(unique=True, index=True)
     password_hash: str
     disabled: Optional[bool] = Field(default=False)
+    role: Optional[str] = Field(default=False)
     
     products: List["Product"] = Relationship(back_populates="members", link_model=MemberProduct)
 
