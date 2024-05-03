@@ -44,8 +44,8 @@
                                 class="bg-red-500 px-2 rounded-lg font-bold text-xl">已KO
                                 </span>
                                 <div v-else :class="['font-bold text-2xl flex flex-row items-center',
-                                                    {'text-red-500': rp.ko_diff < 0},
-                                                    {'text-green-500': rp.ko_diff > 0}]"> 
+                                                    {'text-green-500': rp.ko_diff < 0},
+                                                    {'text-red-500': rp.ko_diff > 0}]"> 
                                                     
                                 <IconArrow :class="['h-5 w-5 mx-1',
                                                     {'rotate-180': rp.ko_diff > 0}, 
@@ -61,8 +61,8 @@
                                 class="bg-red-500 px-2 rounded-lg font-bold">已KI
                                 </span>
                                 <div v-else :class="['font-bold text-2xl flex flex-row items-center',
-                                                    {'text-red-500': rp.ki_diff < 0},
-                                                    {'text-green-500': rp.ki_diff > 0}]"> 
+                                                    {'text-green-500': rp.ki_diff < 0},
+                                                    {'text-red-500': rp.ki_diff > 0}]"> 
                                                     
                                 <IconArrow :class="['h-5 w-5 mx-1',
                                                     {'rotate-180': rp.ki_diff > 0}, 
