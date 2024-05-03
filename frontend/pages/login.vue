@@ -6,7 +6,7 @@
             
             <div class="flex flex-col p-12 px-20 bg-white bg-opacity-10 shadow-2xl rounded-lg animate__animated animate__backInRight ">
 
-                <IconFish class="text-white w-40 mb-8 mx-auto" :class="{'animate__animated': shakeFish === true, 'animate__tada': shakeFish === true}" :fontControlled="false"/>
+                <IconFish class="text-white w-40 mb-8 mx-auto" :class="{'animate__animated': shakeFish, 'animate__tada': shakeFish}" :fontControlled="false"/>
 
                 
                 <div v-if="!register" class="flex justify-center">

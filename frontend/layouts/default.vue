@@ -1,10 +1,15 @@
 
 <template>
     
-   
-<div class="items-center bg-gradient-to-br from-slate-100 to-slate-300 min-h-screen">
+
+<div class="bg-gradient-to-br from-slate-100 to-slate-300 min-h-screen">
     <HeadMenu></HeadMenu>
-    <slot />
+
+    <div class="relative left-0">
+        <slot />
+
+    </div>
+    
 </div>
 
 </template>
