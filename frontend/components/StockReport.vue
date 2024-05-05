@@ -3,8 +3,8 @@
     <div v-if="code" 
         class="flex flex-row">
        
-        <div class="h-full slate-200 p-16 container mx-auto">
-            <div class="container mx-auto bg-white p-8 rounded-lg">
+        <div class="h-full p-16 container mx-8">
+            <div class="container mx-auto p-8 rounded-lg">
                 <div class="container flex mx-auto my-6 justify-center md:justify-between">
                     <div class="flex flex-col gap-3 px-5 ">
                         <div class="text-4xl font-bold">{{ code }}</div>
@@ -19,9 +19,9 @@
                 </div>
 
                 <div class="container flex mx-auto pb-8">
-                    <div class="grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-1 gap-8 p-2 w-full justify-center ">
+                    <div class="grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-8 p-2 w-full justify-center ">
                         <div v-for="rp in report" 
-                        class="rounded-lg flex flex-col justify-center p-10 shadow-slate-600 shadow-xl bg-slate-100">
+                        class="rounded-lg flex flex-col justify-center p-10 shadow-slate-600 shadow-xl bg-slate-50">
 
                             <div class="text-xl mt-2">{{ rp.date }}</div>
                             <div class="flex flex-row gap-4 items-center justify-between">

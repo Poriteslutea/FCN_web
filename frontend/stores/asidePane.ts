@@ -9,7 +9,6 @@ export const useAsidePaneStore = defineStore({
     }),
     actions: {
         selectComponent(component: any){
-            this.isExpand = true
             this.component = component
         },
         close(){

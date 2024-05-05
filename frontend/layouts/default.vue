@@ -5,16 +5,21 @@
 <div class="bg-gradient-to-br from-slate-100 to-slate-300 min-h-screen">
     <HeadMenu></HeadMenu>
 
-    <div class="flex flex-row h-screen bg-slate-200">
+    <div class="flex flex-row h-screen bg-slate-100">
         <div class="bg-back w-20 h-screen">
         </div>
-        <div class="h-full bg-slate-300 w-80 rounded-tr-lg rounded-br-lg">
+        <div class="h-full bg-slate-300 min-w-80  rounded-tr-lg rounded-br-lg transition"
+        :class="{'tanslate-x-0': !isExpand, '-translate-x-full': isExpand}">
             <component :is="selectedPane"></component>
         </div>
+
+        <div :class="{'tanslate-x-0 transition': !isExpand, '-translate-x-80 transition': isExpand}">
+            <ClientOnly>
+                <slot />
+            </ClientOnly>
+        </div>
         
-        <ClientOnly>
-            <slot />
-        </ClientOnly>
+      
 
         <ModalsContainer />
         
@@ -34,10 +39,10 @@ import { ModalsContainer } from 'vue-final-modal'
 
 
 const asidePaneStore = useAsidePaneStore()
-const isAsideExpand = ref(false)
+const { isExpand } = storeToRefs(asidePaneStore)
 const selectedPane = shallowRef()
 selectedPane.value = ProductPane
-isAsideExpand.value = asidePaneStore.isExpand
+
 
   
 
