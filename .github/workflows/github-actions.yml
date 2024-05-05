@@ -48,32 +48,32 @@ jobs:
       
       - name: SSH to remote server and create network (if not exist)
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ REMOTE_HOST }}@${{ REMOTE_HOST }} 'docker network create fcn_network'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'docker network create fcn_network'
         continue-on-error: true
 
       - name: SSH to remote server and pull API Docker image
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ REMOTE_HOST }}@${{ REMOTE_HOST }} 'docker pull ${{ secrets.REGISTRY_URL }}/fcn-api'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'docker pull ${{ secrets.REGISTRY_URL }}/fcn-api'
       
       - name: SSH to remote server and stop existed API container
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ REMOTE_HOST }}@${{ REMOTE_HOST }} 'docker stop fcn-api && docker rm fcn-api'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'docker stop fcn-api && docker rm fcn-api'
         continue-on-error: true
       
       - name: SSH to remote server and run API Docker container
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ REMOTE_HOST }}@${{ REMOTE_HOST }}  'docker run --name fcn-api --restart=always --network fcn_network -p 8000:8000 -d {registry-name}/fcn-api'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}  'docker run --name fcn-api --restart=always --network fcn_network -p 8000:8000 -d ${{ secrets.REGISTRY_URL }}/fcn-api'
       
 
       - name: SSH to remote server and pull frontend Docker image
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ REMOTE_HOST }}@${{ REMOTE_HOST }} 'docker pull ${{ secrets.REGISTRY_URL }}/fcn-frontend'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'docker pull ${{ secrets.REGISTRY_URL }}/fcn-frontend'
       
       - name: SSH to remote server and stop existed frontend container
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ REMOTE_HOST }}@${{ REMOTE_HOST }} 'docker stop fcn-frontend && docker rm fcn-frontend'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'docker stop fcn-frontend && docker rm fcn-frontend'
         continue-on-error: true
       
       - name: SSH to remote server and run frontend Docker container
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ REMOTE_HOST }}@${{ REMOTE_HOST }}  'docker run --name fcn-frontend --restart=always --network fcn_network -p 3000:3000 -d {registry-name}/fcn-frontend'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}  'docker run --name fcn-frontend --restart=always --network fcn_network -p 3000:3000 -d ${{ secrets.REGISTRY_URL }}/fcn-frontend'
