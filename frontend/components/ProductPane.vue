@@ -5,13 +5,14 @@
             <hr class="border-gray-600 border-2 w-full my-2"/>
             <button v-for="item in productList"
                 class="py-2  w-full hover:bg-slate-200"
-                :class="{'bg-teal-100': selectedProductStore.code === item.code, '': selectedProductStore.code !== item.code}"
+                :class="{'bg-teal-100': selectedProductStore.code === item?.code, '': selectedProductStore.code !== item?.code}"
                 @click="selectProduct(item)">
                 {{ item?.code }}
             </button>
 
             
-            <button class="mt-4 py-2 bg-teal-400 hover:bg-teal-300 w-full rounded-lg ">
+            <button class="mt-4 py-2 bg-teal-400 hover:bg-teal-300 w-full rounded-lg"
+            @click="() => open()">
                 新增產品
             </button>
 
@@ -23,8 +24,28 @@
 </template>
 
 <script setup lang="ts">
-const productList = ref()
+import { useModal } from 'vue-final-modal'
+
+import AddProductModal from '~/components/AddProductModal.vue'
+
+const { open, close } = useModal({
+    component: AddProductModal,
+    attrs: {
+      title: 'Hello World!',
+      onConfirm() {
+        close()
+      },
+    },
+    slots: {
+      default: '<p>UseModal: The content of the modal</p>',
+    },
+  })
+
+const productListStore = useProductListStore()
 const selectedProductStore = useSelectedProductStore()
+// const productList = ref([])
+const { list:productList } = storeToRefs(productListStore)
+
 
 
 const selectProduct = async function(item:any) {
@@ -46,6 +67,7 @@ const getProduct = async function() {
         productList.value = []
     }
     if (data.value) {
+        console.log(productList.value)
         productList.value = data.value
         selectProduct(productList.value[0])
     }

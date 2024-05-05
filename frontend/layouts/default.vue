@@ -12,10 +12,11 @@
             <component :is="selectedPane"></component>
         </div>
         
-
         <ClientOnly>
             <slot />
         </ClientOnly>
+
+        <ModalsContainer />
         
 
     </div>
@@ -29,6 +30,8 @@
 
 import HeadMenu from '~/components/HeadMenu.vue'
 import ProductPane from '~/components/ProductPane.vue'
+import { ModalsContainer } from 'vue-final-modal'
+
 
 const asidePaneStore = useAsidePaneStore()
 const isAsideExpand = ref(false)

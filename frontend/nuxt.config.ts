@@ -17,5 +17,6 @@ export default defineNuxtConfig({
       webHost: process.env.WEB_HOST,
       apiBaseUrl: process.env.API_BASE_URL,
     }   
-  }
+  },
+  css: ['vue-final-modal/style.css']
 })

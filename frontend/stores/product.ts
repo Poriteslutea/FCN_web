@@ -13,3 +13,11 @@ export const useSelectedProductStore = defineStore({
         report: {} || undefined
     })
 })
+
+
+export const useProductListStore = defineStore({
+    id: 'ProductList',
+    state: () => ({
+        list: [] || undefined
+    })
+})
