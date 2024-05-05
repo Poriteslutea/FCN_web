@@ -1,30 +1,25 @@
 <template>
-
-
-    
    
-    <div class="flex flex-row">
-        <div class="h-screen bg-slate-300 w-80 rounded-tr-lg rounded-br-lg">
-            dsfdf
-
-        </div>
-        <div class="h-screen slate-200 p-16 container mx-auto">
+    <div v-if="code" 
+        class="flex flex-row">
+       
+        <div class="h-full slate-200 p-16 container mx-auto">
             <div class="container mx-auto bg-white p-8 rounded-lg">
                 <div class="container flex mx-auto my-6 justify-center md:justify-between">
                     <div class="flex flex-col gap-3 px-5 ">
-                        <div class="text-4xl font-bold">SLN35</div>
+                        <div class="text-4xl font-bold">{{ code }}</div>
                         <div class="grid md:grid-cols-3 gap-2 ">
-                            <div class="text-xl">交易日：2023-12-21</div>
-                            <div class="text-xl">觀察日：2024-01-29</div>
-                            <div class="text-xl">結束日：2024-07-01</div>
-                            <div class="text-xl">上限價：100%</div>
-                            <div class="text-xl">下限價：60%</div>
+                            <div class="text-xl">交易日：{{ start_date }}</div>
+                            <div class="text-xl">觀察日：{{ start_trace_date }}</div>
+                            <div class="text-xl">結束日：{{ end_date }}</div>
+                            <div class="text-xl">上限價：{{ ko * 100 }}%</div>
+                            <div class="text-xl">下限價：{{ ki * 100 }}%</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="container flex mx-auto pb-8">
-                    <div class="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-8 p-2 w-full justify-center ">
+                    <div class="grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-1 gap-8 p-2 w-full justify-center ">
                         <div v-for="rp in report" 
                         class="rounded-lg flex flex-col justify-center p-10 shadow-slate-600 shadow-xl bg-slate-100">
 
@@ -89,17 +84,10 @@
 <script setup>
 import IconArrow from '~/assets/icons/arrow-down-solid.svg'
 
-const report = ref()
+const selectedProductStore = useSelectedProductStore()
+const { code, start_date, start_trace_date, end_date, ki, ko, report } = storeToRefs(selectedProductStore)
 
 
-const getReport = async function(product) {
-  const {data, error} = await useAPI(`/report/latest/${product}`, {method: 'GET'})
-  if (data) {
-    report.value = data.value
-    console.log(data.value);
-  }
-}
 
-getReport('SLN35')
 
 </script>
