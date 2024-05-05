@@ -111,14 +111,14 @@
                 type="checkbox"
                 name="stocks"
                 label="股票代碼"
-                :options="['AMD', 'NVDA', 'TSM', 'INTC', 'MSFT']"
+                :options="stocks"
                 :classes="{
                     legend: 'text-white',
                     outer: 'mb-2',
                     label: 'mb-1 text-base text-white',
                     inner: 'rounded-lg',
                     message: 'text-sm mt-1 text-red-900',
-                    options: 'grid grid-cols-2 gap-0 h-[120px] overflow-y-scroll mt-2'
+                    options: 'grid grid-cols-3 gap-0 h-[120px] overflow-y-scroll mt-2'
                 }"
             />
 
@@ -145,6 +145,10 @@
 
 <script setup lang="ts">
 import { VueFinalModal } from 'vue-final-modal'
+import { stocksList } from 'assets/static_data'
+const stocks = ref()
+stocks.value = stocksList
+
 
 defineProps<{
 title?: string
