@@ -29,3 +29,6 @@ __pycache__/
 *$py.class
 notebook/
 local.ini
+
+# others
+.vscode
