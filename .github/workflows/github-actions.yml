@@ -20,6 +20,16 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       
+      - name: Create environment file
+        run: |
+          API_BASE_URL=${{ secrets.API_BASE_URL }} > frontend/.env
+          JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} > backend/.env
+          PG_HOST=${{ secrets.PG_HOST }} >> backend/.env
+          PG_USER=${{ secrets.PG_USER }} >> backend/.env
+          PG_PASSWORD=${{ secrets.PG_PASSWORD }} >> backend/.env
+          PG_PORT=${{ secrets.PG_PORT }} >> backend/.env
+          PG_DATABASE=${{ secrets.PG_DATABASE }} >> backend/.env
+        
       # - name: generate env for production
       #   run: VERSION=RELEASE python genenv.py 
 
