@@ -20,8 +20,8 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       
-      - name: generate env for production
-        run: VERSION=RELEASE python genenv.py 
+      # - name: generate env for production
+      #   run: VERSION=RELEASE python genenv.py 
 
       - name: Build API Docker image
         run: docker build -f Dockerfile.app -t ${{ secrets.REGISTRY_URL }}/fcn-api .
