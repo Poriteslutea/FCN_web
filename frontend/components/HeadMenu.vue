@@ -1,10 +1,15 @@
 <template>
+
+    <div class="fixed left-20 z-10 h-screen bg-slate-300 w-80 rounded-tr-lg rounded-br-lg transition"
+        :class="{'-translate-x-full': !isExpand, 'translate-x-0': isExpand}">
+        <component :is="selectedPane"></component>
+    </div>
     
    
    
     <div class="fixed top-0 left-0 z-10 w-20 h-screen transition-transform bg-gradient-to-br from-blue-950 to-teal-600 rounded-tr-lg rounded-br-lg">
         <div class="flex flex-col h-full items-end pr-3">
-            <div class="grow-0 mb-8">
+            <div class="grow-0 my-8">
                 <IconFish class="text-6xl text-white p-1 mx-auto mt-2 cursor-pointer" @click="toggleMenu"/>
             </div>
             <div class="grow flex flex-col justify-start">
@@ -13,7 +18,7 @@
             </div>
             
             <div class="relative inline-block pt-8" @mouseover="isHoverUser = true" @mouseleave="isHoverUser = false">
-                <button class="mx-auto">
+                <button class="mx-auto mb-8">
                     <IconUser class="text-6xl text-teal-200 hover:text-teal-100 p-2"/>
                 </button>
                 <div v-if="isHoverUser" 
@@ -25,6 +30,8 @@
            
         </div> 
     </div>
+
+    
 
     <!-- <div :class="[{'translate-x-20': isMenuOpen, '-translate-x-full': !isMenuOpen}, 
          'fixed top-0 left-0 w-64 z-40 transition-transform bg-teal-500']">
@@ -59,6 +66,9 @@ const isMenuOpen = ref(false)
 const toggleMenu = ()=>{
     isMenuOpen.value = !isMenuOpen.value
 }
+
+const selectedPane = shallowRef()
+selectedPane.value = ProductPane
 
 const selectPane = (tag) => {
     if (tag === 'product') {

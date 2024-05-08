@@ -3,7 +3,7 @@
     <div v-if="code" 
         class="flex flex-row">
        
-        <div class="h-full p-16 container mx-8">
+        <div class="h-full p-8 container">
             <div class="container mx-auto p-8 rounded-lg">
                 <div class="container flex mx-auto my-6 justify-center md:justify-between">
                     <div class="flex flex-col gap-3 px-5 ">
@@ -19,24 +19,24 @@
                 </div>
 
                 <div class="container flex mx-auto pb-8">
-                    <div class="grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-8 p-2 w-full justify-center ">
+                    <div class="grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-12 w-full justify-center ">
                         <div v-for="rp in report" 
-                        class="rounded-lg flex flex-col justify-center p-10 shadow-slate-600 shadow-xl bg-slate-50">
+                        class="rounded-lg flex flex-col justify-center p-8 shadow-slate-600 shadow-xl bg-slate-50">
 
-                            <div class="text-xl mt-2">{{ rp.date }}</div>
-                            <div class="flex flex-row gap-4 items-center justify-between">
+                            <div class="text-lg mt-2">{{ rp.date }}</div>
+                            <div class="flex flex-row gap-2 items-center justify-between">
                                 <div class="text-3xl">{{ rp.stock }}</div>
                                 <div class="flex flex-col">
-                                <div class="text-lg">今日收盤價</div>
-                                <div class="font-bold text-4xl">{{ rp.close }}</div>
+                                <div class="text-base">今日收盤價</div>
+                                <div class="font-bold text-3xl">{{ rp.close }}</div>
                                 </div>
                             </div>
                             
-                            <div class="text-lg mt-2">上限價格</div>
+                            <div class="text-base mt-2">上限價格</div>
                             <div class="flex flex-row gap-2 items-center">
-                                <div class="font-bold text-3xl">{{ rp.ko_base }} </div>
+                                <div class="font-bold text-2xl">{{ rp.ko_base }} </div>
                                 <span v-if="rp.is_ko" 
-                                class="bg-red-500 px-2 rounded-lg font-bold text-xl">已KO
+                                class="bg-red-500 px-2 rounded-lg font-bold text-lg">已KO
                                 </span>
                                 <div v-else :class="['font-bold text-2xl flex flex-row items-center',
                                                     {'text-green-500': rp.ko_diff < 0},
@@ -49,9 +49,9 @@
                                 </div>
                             </div>
 
-                            <div class="text-lg mt-2">下限價格</div>
+                            <div class="text-base mt-2">下限價格</div>
                             <div class="flex flex-row gap-2 items-center">
-                                <div class="font-bold text-3xl">{{ rp.ki_base }} </div>
+                                <div class="font-bold text-2xl">{{ rp.ki_base }} </div>
                                 <span v-if="rp.is_ki" 
                                 class="bg-red-500 px-2 rounded-lg font-bold">已KI
                                 </span>
